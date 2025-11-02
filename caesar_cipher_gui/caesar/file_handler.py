@@ -1,0 +1,14 @@
+from pathlib import Path
+
+
+def read_text_file(path: str) -> str:
+    p = Path(path)
+    if not p.exists():
+        raise FileNotFoundError(f"File not found: {path}")
+    return p.read_text(encoding="utf-8")
+
+
+def write_text_file(path: str, content: str) -> None:
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(content, encoding="utf-8")
