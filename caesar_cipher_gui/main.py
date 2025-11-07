@@ -38,7 +38,7 @@ class CaesarApp(tk.Tk):
         left.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         ttk.Label(left, text="Input:").pack(anchor=tk.W)
-        self.input_text = scrolledtext.ScrolledText(left, height=12, wrap=tk.WORD)
+        self.input_text = scrolledtext.ScrolledText(left, width=40,height=8, wrap=tk.WORD)
         self.input_text.pack(fill=tk.BOTH, expand=True, padx=(0, 8), pady=(4, 10))
 
         # Right: output text
@@ -48,7 +48,8 @@ class CaesarApp(tk.Tk):
         ttk.Label(right, text="Output:").pack(anchor=tk.W)
         self.output_text = scrolledtext.ScrolledText(
             right,
-            height=12,
+            width=50,
+            height=8,
             wrap=tk.WORD,
             bg="#f7faff",  # light hint background
             font=("Segoe UI", 10),
@@ -97,6 +98,7 @@ class CaesarApp(tk.Tk):
         if text.strip() == "":
             show_error(self, "Input required", "Please enter or load text to transform.")
             return
+
         try:
             validate_ascii_text(text)
         except ValueError as exc:
@@ -105,6 +107,7 @@ class CaesarApp(tk.Tk):
 
         shift = int(self.shift_var.get())
         mode = self.mode_var.get()
+
         try:
             if mode == "encrypt":
                 out = encrypt(text, shift)
@@ -114,15 +117,13 @@ class CaesarApp(tk.Tk):
             show_error(self, "Error", str(exc))
             return
 
-        # Enable text widget to update
+        # ✅ Enable temporarily to update
         self.output_text.config(state=tk.NORMAL)
-
-        # Clear & insert
         self.output_text.delete("1.0", tk.END)
         self.output_text.insert(tk.END, out)
-
-        # Make output read-only
+        # ✅ Lock it again
         self.output_text.config(state=tk.DISABLED)
+
 
     def copy_output(self):
         out = self.output_text.get("1.0", tk.END)
